@@ -35,4 +35,17 @@ app.get('/search', function(req, res) {
   });
 });
 
+app.get('/search/:brand', function(req, res) {
+  var data = [];
+  var queryString = `SELECT * FROM licence_plates
+  WHERE car_brand ='${req.query.car_brand}'`;
+  connection.query(queryString, function(err, result, fileds) {
+      result.forEach(function(element){
+        data.push({'plate': element.plate, 'car_brand': element.car_brand, 'car_model': element.car_model, 'color': element.color, 'year': element.year})
+      });
+      res.send({'result': data});
+  });
+});
+
+
 app.listen(3000, () => console.log("server running"));
