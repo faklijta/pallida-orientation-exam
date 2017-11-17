@@ -19,14 +19,19 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/assets/index.html')
 })
 
-app.get('/all', function(req, res) {
+app.get('/search', function(req, res) {
   var data = [];
+  if (req.query.plate) {
+    var queryString = `SELECT * FROM licence_plates
+    WHERE plate LIKE '%${req.query.plate}%'`;
+  } else {
   var queryString = `SELECT * FROM licence_plates`;
+  }
   connection.query(queryString, function(err, result, fileds) {
       result.forEach(function(element){
         data.push({'plate': element.plate, 'car_brand': element.car_brand, 'car_model': element.car_model, 'color': element.color, 'year': element.year})
       });
-      res.send({'cars': data});
+      res.send({'result': data});
   });
 });
 
